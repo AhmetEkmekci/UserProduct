@@ -1,0 +1,19 @@
+﻿@model List<UserProduct.Domain.CartDto>
+
+@{
+    Layout = null;
+}
+
+
+@foreach (var cart in Model)
+{
+    await Html.RenderPartialAsync("_cartItem", cart);
+}
+
+<div class="row mt-1 mb-1">
+    <div class="col-4">&nbsp;</div>
+    <div class="col-2">&nbsp;</div>
+    <div class="col-2">Toplam</div>
+    <div class="col-2">@(Model.Sum(x=>x.Product.Price * x.Quantity).ToString("C"))</div>
+    <div class="col-2">&nbsp;</div>
+</div>

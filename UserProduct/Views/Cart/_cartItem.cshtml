@@ -1,0 +1,9 @@
+﻿@model UserProduct.Domain.CartDto
+
+<div class="row mt-1 mb-1">
+    <div class="col-4">@Model.Product.Name</div>
+    <div class="col-2">@Model.Quantity</div>
+    <div class="col-2">@Model.Product.Price.ToString("C")</div>
+    <div class="col-2">@((Model.Product.Price * Model.Quantity).ToString("C"))</div>
+    <div class="col-2"><button data-Id="@Model.ProductId" class="CartRemoveItem btn btn-sm text-sm-center text-white btn-danger">Sil</button></div>
+</div>

@@ -1,0 +1,97 @@
+﻿@model List<UserProduct.Domain.CartDto>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+@{
+    var productSelectList = (ViewBag.Products as List<UserProduct.Domain.ProductDto>).Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+}
+<div class="container">
+    <div class="row mt-1 mb-1">
+        <div class="col-3">Ürün Listesi </div>
+        <div class="col-4">@Html.DropDownList("Products", productSelectList, "Ürün", new { @class = "form-control" })</div>
+        <div class="col-2">@Html.TextBox("Quantity", "", new { @class = "form-control", placeholder = "Adet", type = "number" })</div>
+        <div class="col-3"><button id="CartUpdate" class="btn text-sm-center text-white btn-primary">Sepete Ekle</button></div>
+    </div>
+</div>
+
+<h2 class="mt-5 border-bottom">Sepet</h2>
+<div id="cartContainer" class="container">
+    <div class="row mt-1 mb-2 text-primary">
+        <div class="col-4">Ürün Adı</div>
+        <div class="col-2">Adet</div>
+        <div class="col-2">Fiyat</div>
+        <div class="col-2">Toplam Fiyat</div>
+        <div class="col-2"><button id="CartClear" class="btn btn-sm text-sm-center text-white btn-warning">Temizle</button></div>
+    </div>
+
+    @await Html.PartialAsync("_cart", Model)
+
+</div>
+
+
+@section Scripts{
+
+    <script>
+        function CartShow() {
+            $.ajax({
+                url: '@Url.Action("CartData", "Cart")',
+                data: {
+                    UserId: @ViewBag.UserId
+                },
+                complete: function (data) {
+                    $("#cartContainer .row:not(:first)").remove();
+                    $("#cartContainer").append(data.responseText);
+                }
+            });
+        }
+
+        $("#CartClear").click(function () {
+            $.ajax({
+                url: '@Url.Action("CartClear", "Cart")',
+                data: {
+                    UserId: @ViewBag.UserId,
+                },
+                success: function (data) {
+                    alert(data);
+                    CartShow();
+                }
+            })
+        });
+
+        $(document).on("click", ".CartRemoveItem", function () {
+            let productId = $(this).data("id");
+            $.ajax({
+                url: '@Url.Action("CartRemoveItem", "Cart")',
+                data: {
+                    UserId: @ViewBag.UserId,
+                    ProductId: productId
+                },
+                success: function (data) {
+                    alert(data);
+                    CartShow();
+                }
+            })
+        });
+
+        $("#CartUpdate").click(function () {
+            if ($("#Products").val() == "" || $("#Quantity").val() == "" || parseInt($("#Quantity").val()) <= 0)
+                alert("Lütfen ürün ve adet girin");
+            else
+            $.ajax({
+                url: '@Url.Action("CartUpdate", "Cart")',
+                data: {
+                    UserId: @ViewBag.UserId,
+                    ProductId:$("#Products").val(),
+                    Quantity: $("#Quantity").val(),
+                },
+                success: function (data) {
+                    alert(data);
+                    CartShow();
+                }
+            })
+        });
+    </script>
+
+}

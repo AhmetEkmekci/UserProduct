@@ -1,0 +1,21 @@
+﻿@model List<UserProduct.Domain.UserDto>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div class="container">
+    @foreach (var user in Model)
+    {
+        <div class="row mt-1 mb-1">
+            <div class="col-3">@user.FirstName</div>
+            <div class="col-3">@user.LastName</div>
+            <div class="col-3">@user.EMailAddress</div>
+            <div class="col-3"><a href="@Url.Action("Index","Cart", new { Id = user.Id })" class="btn btn-sm text-sm-center text-white btn-info">Detay</a></div>
+        </div>
+    }
+</div>
